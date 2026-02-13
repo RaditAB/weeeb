@@ -2,9 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>🌹 Valentine Special - Swipe Edition 🌹</title>
     <style>
+        html {
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -14,28 +18,32 @@
 
         body {
             font-family: 'Palatino', 'Book Antiqua', serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
         }
 
         /* Swipe Container */
         .swipe-container {
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
+            position: relative;
+            touch-action: pan-y pinch-zoom;
         }
 
         .page {
             min-width: 100vw;
-            height: 100vh;
-            overflow-y: auto;
+            min-height: 100vh;
+            overflow-y: scroll;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             position: relative;
+            padding-bottom: 100px;
+            touch-action: pan-y;
         }
 
         /* Tab Navigation within pages */
@@ -1089,10 +1097,10 @@
                     </div>
                     <div class="input-group">
                         <label>Pesan:</label>
-                        <textarea id="letterMessage" placeholder="Tuliskan harapan kamu dalam hubungan ini..."></textarea>
+                        <textarea id="letterMessage" placeholder="Tuliskan perasaanmu..."></textarea>
                     </div>
                     <button class="generate-btn" onclick="generateLetter()">
-                        ✨ Buat Surat Harapan ✨
+                        ✨ Buat Surat ✨
                     </button>
 
                     <div class="letter-preview" id="letterPreview">
@@ -1249,25 +1257,39 @@
         const totalPages = 5;
         let touchStartX = 0;
         let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
         let isDragging = false;
 
         const container = document.getElementById('swipeContainer');
 
         container.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
-            isDragging = true;
-        });
+            touchStartY = e.touches[0].clientY;
+            isDragging = false;
+        }, { passive: true });
 
         container.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            touchEndX = e.touches[0].clientX;
-        });
+            if (!isDragging) {
+                touchEndX = e.touches[0].clientX;
+                touchEndY = e.touches[0].clientY;
+                
+                // Detect if horizontal swipe
+                const diffX = Math.abs(touchStartX - touchEndX);
+                const diffY = Math.abs(touchStartY - touchEndY);
+                
+                if (diffX > diffY && diffX > 20) {
+                    isDragging = true;
+                }
+            }
+        }, { passive: true });
 
         container.addEventListener('touchend', () => {
-            if (!isDragging) return;
+            if (isDragging) {
+                handleSwipe();
+            }
             isDragging = false;
-            handleSwipe();
-        });
+        }, { passive: true });
 
         function handleSwipe() {
             const swipeThreshold = 50;
@@ -1392,7 +1414,7 @@
 
             const letterContent = `
                 <h3 style="color: #ff1493; text-align: center; margin-bottom: 20px;">
-                    💌 Surat Harapan 💌
+                    💌 Surat Cinta 💌
                 </h3>
                 <p style="margin-bottom: 15px;"><strong>Untuk ${to},</strong></p>
                 <p style="text-indent: 30px; margin-bottom: 15px;">${message}</p>
@@ -1742,16 +1764,6 @@
                 scoreEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 100);
         }
-
-        // Prevent pull-to-refresh on mobile
-        document.body.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.page')) {
-                const page = e.target.closest('.page');
-                if (page.scrollTop === 0 && e.touches[0].clientY > touchStartX) {
-                    e.preventDefault();
-                }
-            }
-        }, { passive: false });
     </script>
 </body>
 </html>
