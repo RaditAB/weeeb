@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌹 Valentine Special - Swipe Edition 🌹</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Palatino', 'Book Antiqua', serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        /* Swipe Container */
+        .swipe-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .page {
+            min-width: 100vw;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        /* Tab Navigation within pages */
+        .page-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin: 15px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #ffc0cb;
+            border-radius: 20px;
+            color: #ff1493;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            color: white;
+            border-color: #ff1493;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page 1 - Home */
+        .page-home {
+            background: linear-gradient(135deg, #ffffff 0%, #ffb3d9 50%, #ff69b4 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .home-title {
+            font-size: 3em;
+            color: #ff1493;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(255, 255, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .home-subtitle {
+            font-size: 1.5em;
+            color: #ff69b4;
+            margin-bottom: 40px;
+        }
+
+        .home-date {
+            font-size: 1.2em;
+            color: #ff1493;
+            margin-bottom: 60px;
+        }
+
+        .swipe-hint {
+            font-size: 1.1em;
+            color: #ff1493;
+            margin-top: 40px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
+            40% { transform: translateX(-10px); }
+            60% { transform: translateX(-5px); }
+        }
+
+        /* Page 2 - Flower Garden */
+        .page-garden {
+            background: linear-gradient(to bottom, #ffffff 0%, #ffe6f2 50%, #ffd6e8 100%);
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2em;
+            color: #ff1493;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .garden-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .flower-pot {
+            cursor: pointer;
+            text-align: center;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+        }
+
+        .flower-pot:active {
+            transform: scale(0.95);
+        }
+
+        .flower {
+            font-size: 50px;
+            filter: drop-shadow(0 3px 10px rgba(255, 105, 180, 0.3));
+            transition: all 0.3s;
+        }
+
+        .flower-pot.bloomed .flower {
+            animation: bloom 0.6s ease-out;
+        }
+
+        @keyframes bloom {
+            0% { transform: scale(0.5) rotate(-45deg); opacity: 0; }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .flower-name {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #c71585;
+            font-weight: bold;
+        }
+
+        .bloom-counter {
+            text-align: center;
+            font-size: 1.3em;
+            color: #ff1493;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        /* Page 3 - Love Calculator */
+        .page-calculator {
+            background: linear-gradient(135deg, #ffffff 0%, #ffe6f2 100%);
+            padding: 20px;
+        }
+
+        .calculator-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(233, 30, 99, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #c71585;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffc0cb;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff1493;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.2);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .love-result {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .love-result.show {
+            opacity: 1;
+        }
+
+        .love-percentage {
+            font-size: 4em;
+            color: #e91e63;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .love-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .love-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffb3d9 0%, #ff69b4 100%);
+            width: 0%;
+            transition: width 2s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .love-message {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Page 4 - Love Letter */
+        .page-letter {
+            background: linear-gradient(135deg, #ffffff 0%, #ffe6f2 100%);
+            padding: 20px;
+        }
+
+        .letter-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(233, 30, 99, 0.2);
+            position: relative;
+        }
+
+        .letter-container::before,
+        .letter-container::after {
+            content: '🌹';
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.2;
+        }
+
+        .letter-container::before {
+            top: 10px;
+            left: 10px;
+        }
+
+        .letter-container::after {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .letter-input textarea {
+            width: 100%;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .letter-preview {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(to bottom, #fff9fc, #ffffff);
+            border-radius: 15px;
+            border: 2px dashed #ff69b4;
+            display: none;
+        }
+
+        .letter-preview.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .letter-content {
+            font-size: 1em;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Page 5 - Bouquet Builder */
+        .page-bouquet {
+            background: linear-gradient(135deg, #ffffff 0%, #ffe6f2 100%);
+            padding: 20px;
+        }
+
+        .bouquet-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .rose-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .rose-option {
+            cursor: pointer;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+        }
+
+        .rose-option:active {
+            transform: scale(0.95);
+            border-color: #ff1493;
+        }
+
+        .rose-icon {
+            font-size: 45px;
+            margin-bottom: 8px;
+        }
+
+        .rose-label {
+            font-size: 0.9em;
+            color: #c71585;
+            font-weight: bold;
+        }
+
+        .bouquet-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            min-height: 150px;
+        }
+
+        .bouquet-flowers {
+            font-size: 40px;
+            line-height: 1.3;
+            letter-spacing: 5px;
+            word-wrap: break-word;
+        }
+
+        .bouquet-count {
+            font-size: 1.2em;
+            color: #ff1493;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .clear-bouquet-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #c71585 0%, #ff1493 100%);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .clear-bouquet-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Memory Match Game */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: white;
+            border: 3px solid #ffc0cb;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .memory-card.flipped {
+            background: linear-gradient(135deg, #ffb3d9 0%, #ff69b4 100%);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            border-color: #ff1493;
+            opacity: 0.7;
+        }
+
+        .memory-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            margin: 15px;
+            font-size: 1.1em;
+            color: #ff1493;
+            font-weight: bold;
+        }
+
+        /* Kiss Counter */
+        .kiss-counter-container {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .kiss-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            border: none;
+            font-size: 100px;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .kiss-button:active {
+            transform: scale(0.95);
+        }
+
+        .kiss-count {
+            font-size: 3em;
+            color: #ff1493;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .kiss-message {
+            font-size: 1.3em;
+            color: #ff69b4;
+            margin: 15px 0;
+        }
+
+        /* Love Fortune */
+        .fortune-container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .fortune-envelope {
+            width: 250px;
+            height: 150px;
+            background: linear-gradient(135deg, #fff 0%, #ffe6f2 100%);
+            border: 3px solid #ff69b4;
+            border-radius: 10px;
+            margin: 30px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .fortune-envelope:active {
+            transform: scale(0.95);
+        }
+
+        .fortune-message {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px;
+            border: 2px solid #ffc0cb;
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #555;
+            text-align: center;
+            display: none;
+        }
+
+        .fortune-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Love Quiz */
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 15px;
+            border: 2px solid #ffc0cb;
+        }
+
+        .quiz-question h3 {
+            color: #ff1493;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: linear-gradient(135deg, #fff 0%, #fffbfd 100%);
+            border: 2px solid #ffc0cb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .quiz-option:active {
+            transform: scale(0.98);
+        }
+
+        .quiz-option.selected {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            color: white;
+            border-color: #ff1493;
+        }
+
+        .quiz-score {
+            text-align: center;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            margin: 15px;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        .quiz-score h2 {
+            color: #ff1493;
+            font-size: 2.5em;
+            margin: 15px 0;
+        }
+
+        .quiz-score p {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Couples Quiz */
+        .couple-question {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px;
+            border: 2px solid #ffc0cb;
+        }
+
+        .couple-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .couple-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffc0cb;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+
+        .couple-result {
+            text-align: center;
+            font-size: 1.3em;
+            color: #ff1493;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Heart Catcher Game */
+        .heart-game-container {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(to bottom, #fff 0%, #ffe6f2 100%);
+            border-radius: 15px;
+            margin: 15px;
+            overflow: hidden;
+            border: 3px solid #ffc0cb;
+        }
+
+        .heart-basket {
+            position: absolute;
+            bottom: 10px;
+            font-size: 60px;
+            cursor: pointer;
+            transition: left 0.1s;
+        }
+
+        .falling-heart {
+            position: absolute;
+            font-size: 40px;
+            animation: heartFall linear;
+        }
+
+        @keyframes heartFall {
+            from { top: -50px; }
+            to { top: 450px; }
+        }
+
+        .game-score {
+            text-align: center;
+            font-size: 1.5em;
+            color: #ff1493;
+            font-weight: bold;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            margin: 15px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+            color: #999;
+        }
+
+        .nav-btn.active {
+            color: #ff1493;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        /* Petals Animation */
+        .petals-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(ellipse at center, #ff69b4 0%, #ff1493 100%);
+            border-radius: 50% 0 50% 0;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.5);
+            border-radius: 10px;
+        }
+
+        /* Page indicators */
+        .page-indicators {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 182, 193, 0.5);
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            width: 24px;
+            border-radius: 4px;
+            background: #ff69b4;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 400px) {
+            .home-title {
+                font-size: 2.2em;
+            }
+
+            .page-title {
+                font-size: 1.6em;
+            }
+
+            .flower {
+                font-size: 40px;
+            }
+
+            .rose-icon {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Petals Background -->
+    <div class="petals-container" id="petalsContainer"></div>
+
+    <!-- Page Indicators -->
+    <div class="page-indicators">
+        <div class="indicator active" data-page="0"></div>
+        <div class="indicator" data-page="1"></div>
+        <div class="indicator" data-page="2"></div>
+        <div class="indicator" data-page="3"></div>
+        <div class="indicator" data-page="4"></div>
+    </div>
+
+    <!-- Swipe Container -->
+    <div class="swipe-container" id="swipeContainer">
+        
+        <!-- Page 1: Home -->
+        <div class="page page-home">
+            <div class="home-title">💖 Valentine 💖</div>
+            <div class="home-subtitle">Garden of Love</div>
+            <div class="home-date">14 Februari 2026</div>
+            <div style="font-size: 80px; margin: 30px 0;">🌹</div>
+            <div class="swipe-hint">← Geser untuk menjelajah →</div>
+        </div>
+
+        <!-- Page 2: Games Tab -->
+        <div class="page page-garden">
+            <div class="page-title">🎮 Game Valentine 🎮</div>
+            
+            <div class="page-tabs">
+                <button class="tab-btn active" onclick="switchTab(1, 0)">🌸 Taman Bunga</button>
+                <button class="tab-btn" onclick="switchTab(1, 1)">🎴 Memory Match</button>
+                <button class="tab-btn" onclick="switchTab(1, 2)">💋 Kiss Counter</button>
+            </div>
+
+            <!-- Tab 1: Flower Garden -->
+            <div class="tab-content active" id="game-tab-0">
+                <div style="text-align: center; color: #666; margin-bottom: 15px; padding: 0 20px;">
+                    Ketuk bunga untuk membuatnya mekar!
+                </div>
+                <div class="bloom-counter">
+                    🌺 <span id="bloomCount">0</span> Bunga Mekar 🌺
+                </div>
+                <div class="garden-grid">
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌹')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Mawar</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌺')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Sepatu</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌻')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Matahari</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌷')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Tulip</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌸')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Sakura</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🏵️')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Rosette</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '💐')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Bouquet</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌼')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Daisy</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, '🌻')">
+                        <div class="flower">🥀</div>
+                        <div class="flower-name">Bunga</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Memory Match -->
+            <div class="tab-content" id="game-tab-1">
+                <div style="text-align: center; color: #666; margin-bottom: 15px; padding: 0 20px;">
+                    Temukan pasangan emoji yang sama!
+                </div>
+                <div class="memory-stats">
+                    <div>Moves: <span id="moveCount">0</span></div>
+                    <div>Matched: <span id="matchCount">0</span>/8</div>
+                </div>
+                <div class="memory-grid" id="memoryGrid"></div>
+                <button class="clear-bouquet-btn" onclick="resetMemoryGame()" style="margin: 15px; width: calc(100% - 30px);">
+                    🔄 Main Lagi
+                </button>
+            </div>
+
+            <!-- Tab 3: Kiss Counter -->
+            <div class="tab-content" id="game-tab-2">
+                <div class="kiss-counter-container">
+                    <div style="color: #666; margin-bottom: 20px;">
+                        Klik bibir untuk mengirim ciuman! 💋
+                    </div>
+                    <button class="kiss-button" onclick="sendKiss()">💋</button>
+                    <div class="kiss-count"><span id="kissCount">0</span> Ciuman</div>
+                    <div class="kiss-message" id="kissMessage">Mulai kirim ciuman!</div>
+                    <button class="clear-bouquet-btn" onclick="resetKisses()" style="max-width: 300px; margin: 20px auto; display: block;">
+                        🔄 Reset
+                    </button>
+                </div>
+            </div>
+
+            <div style="height: 80px;"></div>
+        </div>
+
+        <!-- Page 3: Love Tools -->
+        <div class="page page-calculator">
+            <div class="page-title">💕 Love Tools 💕</div>
+            
+            <div class="page-tabs">
+                <button class="tab-btn active" onclick="switchTab(2, 0)">💘 Kalkulator</button>
+                <button class="tab-btn" onclick="switchTab(2, 1)">❤️ Heart Catcher</button>
+                <button class="tab-btn" onclick="switchTab(2, 2)">🔮 Ramalan</button>
+            </div>
+
+            <!-- Tab 1: Love Calculator -->
+            <div class="tab-content active" id="calc-tab-0">
+                <div class="calculator-container">
+                    <div class="input-group">
+                        <label>Nama Pertama</label>
+                        <input type="text" id="name1" placeholder="Masukkan nama...">
+                    </div>
+                    <div class="input-group">
+                        <label>Nama Kedua</label>
+                        <input type="text" id="name2" placeholder="Masukkan nama...">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateLove()">
+                        Hitung Cinta 💘
+                    </button>
+                    <div class="love-result" id="loveResult">
+                        <div class="love-percentage" id="lovePercentage"></div>
+                        <div class="love-bar-container">
+                            <div class="love-bar" id="loveBar"></div>
+                        </div>
+                        <div class="love-message" id="loveMessage"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Heart Catcher Game -->
+            <div class="tab-content" id="calc-tab-1">
+                <div style="text-align: center; color: #666; margin: 15px; padding: 0 20px;">
+                    Gerakkan keranjang untuk menangkap hati! ❤️
+                </div>
+                <div class="game-score">
+                    Skor: <span id="catchScore">0</span> ❤️
+                </div>
+                <div class="heart-game-container" id="heartGameContainer">
+                    <div class="heart-basket" id="heartBasket">🧺</div>
+                </div>
+                <div style="text-align: center; margin: 15px;">
+                    <button class="calculate-btn" onclick="startHeartGame()" style="max-width: 300px; margin: 0 auto;">
+                        🎮 Mulai Game
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Love Fortune -->
+            <div class="tab-content" id="calc-tab-2">
+                <div class="fortune-container">
+                    <div style="text-align: center; color: #666; margin: 15px;">
+                        Buka amplop untuk melihat ramalanmu! 💌
+                    </div>
+                    <div class="fortune-envelope" onclick="openFortune()">
+                        💌
+                    </div>
+                    <div class="fortune-message" id="fortuneMessage"></div>
+                </div>
+            </div>
+
+            <div style="height: 80px;"></div>
+        </div>
+
+        <!-- Page 4: Love Messages -->
+        <div class="page page-letter">
+            <div class="page-title">💌 Pesan Cinta 💌</div>
+            
+            <div class="page-tabs">
+                <button class="tab-btn active" onclick="switchTab(3, 0)">✍️ Surat Cinta</button>
+                <button class="tab-btn" onclick="switchTab(3, 1)">❓ Love Quiz</button>
+            </div>
+
+            <!-- Tab 1: Love Letter -->
+            <div class="tab-content active" id="letter-tab-0">
+                <div class="letter-container">
+                    <div class="input-group">
+                        <label>Untuk:</label>
+                        <input type="text" id="letterTo" placeholder="Nama orang spesial...">
+                    </div>
+                    <div class="input-group">
+                        <label>Dari:</label>
+                        <input type="text" id="letterFrom" placeholder="Namamu...">
+                    </div>
+                    <div class="input-group">
+                        <label>Pesan:</label>
+                        <textarea id="letterMessage" placeholder="Tuliskan harapan kamu dalam hubungan ini..."></textarea>
+                    </div>
+                    <button class="generate-btn" onclick="generateLetter()">
+                        ✨ Buat Surat Harapan ✨
+                    </button>
+
+                    <div class="letter-preview" id="letterPreview">
+                        <div class="letter-content" id="letterContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Love Quiz -->
+            <div class="tab-content" id="letter-tab-1">
+                <div style="text-align: center; color: #666; margin: 15px; padding: 0 20px;">
+                    Jawab semua pertanyaan untuk tahu tipe romantismu!
+                </div>
+                
+                <div class="quiz-question">
+                    <h3>1. Kencan Valentine impianmu?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuiz(this, 10)">
+                            🍽️ Dinner romantis di restoran
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 15)">
+                            🏡 Masak bareng di rumah
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 12)">
+                            🌅 Piknik saat sunset
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 8)">
+                            🎬 Nonton film bareng
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h3>2. Hadiah Valentine terbaik?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuiz(this, 15)">
+                            🎁 DIY handmade gift
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 10)">
+                            💐 Bunga dan cokelat
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 12)">
+                            ✈️ Trip berdua
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 8)">
+                            💌 Surat cinta tulus
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h3>3. Cara ekspresikan cinta?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuiz(this, 15)">
+                            💬 Quality time bersama
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 12)">
+                            🎁 Kasih hadiah surprise
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 10)">
+                            🤗 Physical affection
+                        </div>
+                        <div class="quiz-option" onclick="selectQuiz(this, 8)">
+                            💖 Kata-kata manis
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-score" id="quizScore">
+                    <h2 id="quizPoints">0/45</h2>
+                    <p id="quizResult"></p>
+                </div>
+            </div>
+
+            <div style="height: 80px;"></div>
+        </div>
+
+        <!-- Page 5: Bouquet Builder -->
+        <div class="page page-bouquet">
+            <div class="page-title">💐 Buat Buket 💐</div>
+            <div class="bouquet-container">
+                <div style="text-align: center; color: #666; margin-bottom: 15px;">
+                    Ketuk bunga untuk menambahkan
+                </div>
+                <div class="rose-selector">
+                    <div class="rose-option" onclick="addToBouquet('🌹')">
+                        <div class="rose-icon">🌹</div>
+                        <div class="rose-label">Mawar</div>
+                    </div>
+                    <div class="rose-option" onclick="addToBouquet('🌺')">
+                        <div class="rose-icon">🌺</div>
+                        <div class="rose-label">Sepatu</div>
+                    </div>
+                    <div class="rose-option" onclick="addToBouquet('🌷')">
+                        <div class="rose-icon">🌷</div>
+                        <div class="rose-label">Tulip</div>
+                    </div>
+                    <div class="rose-option" onclick="addToBouquet('🌸')">
+                        <div class="rose-icon">🌸</div>
+                        <div class="rose-label">Sakura</div>
+                    </div>
+                    <div class="rose-option" onclick="addToBouquet('🌻')">
+                        <div class="rose-icon">🌻</div>
+                        <div class="rose-label">Matahari</div>
+                    </div>
+                    <div class="rose-option" onclick="addToBouquet('🌼')">
+                        <div class="rose-icon">🌼</div>
+                        <div class="rose-label">Daisy</div>
+                    </div>
+                </div>
+
+                <div class="bouquet-display">
+                    <div class="bouquet-flowers" id="bouquetDisplay">
+                        💐<br>Mulai buat buket!
+                    </div>
+                    <div class="bouquet-count" id="bouquetCount"></div>
+                </div>
+                <button class="clear-bouquet-btn" onclick="clearBouquet()">
+                    🗑️ Hapus Buket
+                </button>
+            </div>
+            <div style="height: 80px;"></div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="goToPage(0)">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" onclick="goToPage(1)">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-label">Game</span>
+        </button>
+        <button class="nav-btn" onclick="goToPage(2)">
+            <span class="nav-icon">💕</span>
+            <span class="nav-label">Tools</span>
+        </button>
+        <button class="nav-btn" onclick="goToPage(3)">
+            <span class="nav-icon">💌</span>
+            <span class="nav-label">Pesan</span>
+        </button>
+        <button class="nav-btn" onclick="goToPage(4)">
+            <span class="nav-icon">💐</span>
+            <span class="nav-label">Buket</span>
+        </button>
+    </div>
+
+    <script>
+        // Swipe functionality
+        let currentPage = 0;
+        const totalPages = 5;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+
+        const container = document.getElementById('swipeContainer');
+
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            isDragging = true;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            touchEndX = e.touches[0].clientX;
+        });
+
+        container.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0 && currentPage < totalPages - 1) {
+                    // Swipe left - next page
+                    currentPage++;
+                    updatePage();
+                } else if (diff < 0 && currentPage > 0) {
+                    // Swipe right - previous page
+                    currentPage--;
+                    updatePage();
+                }
+            }
+        }
+
+        function goToPage(pageNum) {
+            currentPage = pageNum;
+            updatePage();
+        }
+
+        function updatePage() {
+            const offset = -currentPage * 100;
+            container.style.transform = `translateX(${offset}vw)`;
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index === currentPage);
+            });
+
+            // Update indicators
+            document.querySelectorAll('.indicator').forEach((ind, index) => {
+                ind.classList.toggle('active', index === currentPage);
+            });
+        }
+
+        // Falling Petals
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            petal.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.getElementById('petalsContainer').appendChild(petal);
+            
+            setTimeout(() => petal.remove(), 8000);
+        }
+
+        setInterval(createPetal, 400);
+
+        // Flower Garden
+        let bloomedFlowers = 0;
+
+        function bloomFlower(element, flower) {
+            if (!element.classList.contains('bloomed')) {
+                element.classList.add('bloomed');
+                element.querySelector('.flower').textContent = flower;
+                bloomedFlowers++;
+                document.getElementById('bloomCount').textContent = bloomedFlowers;
+            }
+        }
+
+        // Love Calculator
+        function calculateLove() {
+            const name1 = document.getElementById('name1').value.trim();
+            const name2 = document.getElementById('name2').value.trim();
+            
+            if (!name1 || !name2) {
+                alert('Mohon isi kedua nama!');
+                return;
+            }
+
+            const loveResult = document.getElementById('loveResult');
+            const loveBar = document.getElementById('loveBar');
+            const lovePercentage = document.getElementById('lovePercentage');
+            const loveMessage = document.getElementById('loveMessage');
+
+            let total = 0;
+            const combined = (name1 + name2).toLowerCase();
+            for (let i = 0; i < combined.length; i++) {
+                total += combined.charCodeAt(i);
+            }
+            
+            const percentage = (total % 101);
+            const actualPercentage = percentage < 40 ? percentage + 50 : percentage;
+
+            loveResult.classList.add('show');
+            
+            setTimeout(() => {
+                lovePercentage.textContent = actualPercentage + '%';
+                loveBar.style.width = actualPercentage + '%';
+                loveBar.textContent = actualPercentage + '%';
+
+                let message = '';
+                if (actualPercentage >= 90) {
+                    message = '💕 Pasangan sempurna! 💕';
+                } else if (actualPercentage >= 70) {
+                    message = '💖 Sangat romantis! 💖';
+                } else if (actualPercentage >= 50) {
+                    message = '💗 Ada chemistry! 💗';
+                } else {
+                    message = '💘 Butuh usaha! 💘';
+                }
+                
+                loveMessage.textContent = message;
+            }, 100);
+        }
+
+        // Love Letter
+        function generateLetter() {
+            const to = document.getElementById('letterTo').value.trim();
+            const from = document.getElementById('letterFrom').value.trim();
+            const message = document.getElementById('letterMessage').value.trim();
+
+            if (!to || !from || !message) {
+                alert('Mohon lengkapi semua!');
+                return;
+            }
+
+            const letterContent = `
+                <h3 style="color: #ff1493; text-align: center; margin-bottom: 20px;">
+                    💌 Surat Harapan 💌
+                </h3>
+                <p style="margin-bottom: 15px;"><strong>Untuk ${to},</strong></p>
+                <p style="text-indent: 30px; margin-bottom: 15px;">${message}</p>
+                <p style="margin-top: 25px;">Di Valentine ini, aku ingin kamu tahu betapa berartinya kamu bagiku. 💕</p>
+                <p style="margin-top: 20px; text-align: right;">
+                    <strong>Dengan cinta,<br>${from} 🌹</strong>
+                </p>
+            `;
+
+            document.getElementById('letterContent').innerHTML = letterContent;
+            document.getElementById('letterPreview').classList.add('show');
+        }
+
+        // Bouquet Builder
+        let bouquet = [];
+
+        function addToBouquet(flower) {
+            bouquet.push(flower);
+            updateBouquet();
+        }
+
+        function updateBouquet() {
+            const display = document.getElementById('bouquetDisplay');
+            const count = document.getElementById('bouquetCount');
+            
+            if (bouquet.length === 0) {
+                display.innerHTML = '💐<br>Mulai buat buket!';
+                count.textContent = '';
+            } else {
+                display.textContent = bouquet.join(' ');
+                count.textContent = `🎀 ${bouquet.length} tangkai 🎀`;
+            }
+        }
+
+        function clearBouquet() {
+            bouquet = [];
+            updateBouquet();
+        }
+
+        // Tab Switching
+        function switchTab(pageIndex, tabIndex) {
+            const prefixes = ['', 'game', 'calc', 'letter', 'bouquet'];
+            const prefix = prefixes[pageIndex];
+            
+            // Hide all tabs for this page
+            const allTabs = document.querySelectorAll(`[id^="${prefix}-tab-"]`);
+            allTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(`${prefix}-tab-${tabIndex}`);
+            if (selectedTab) selectedTab.classList.add('active');
+            
+            // Update tab buttons
+            const page = document.querySelectorAll('.page')[pageIndex];
+            const buttons = page.querySelectorAll('.tab-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === tabIndex);
+            });
+        }
+
+        // Memory Match Game
+        const memoryEmojis = ['❤️', '💕', '💖', '💗', '💘', '💝', '💞', '💓'];
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moveCount = 0;
+
+        function initMemoryGame() {
+            const grid = document.getElementById('memoryGrid');
+            if (!grid) return;
+            
+            // Create pairs and shuffle
+            memoryCards = [...memoryEmojis, ...memoryEmojis]
+                .sort(() => Math.random() - 0.5)
+                .map((emoji, index) => ({ emoji, id: index, matched: false }));
+            
+            grid.innerHTML = '';
+            memoryCards.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'memory-card';
+                cardEl.innerHTML = '❓';
+                cardEl.onclick = () => flipCard(index, cardEl);
+                grid.appendChild(cardEl);
+            });
+            
+            matchedPairs = 0;
+            moveCount = 0;
+            flippedCards = [];
+            document.getElementById('matchCount').textContent = '0';
+            document.getElementById('moveCount').textContent = '0';
+        }
+
+        function flipCard(index, element) {
+            if (flippedCards.length >= 2 || memoryCards[index].matched || flippedCards.includes(index)) return;
+            
+            element.innerHTML = memoryCards[index].emoji;
+            element.classList.add('flipped');
+            flippedCards.push(index);
+            
+            if (flippedCards.length === 2) {
+                moveCount++;
+                document.getElementById('moveCount').textContent = moveCount;
+                
+                setTimeout(() => {
+                    const [first, second] = flippedCards;
+                    if (memoryCards[first].emoji === memoryCards[second].emoji) {
+                        // Match found
+                        memoryCards[first].matched = true;
+                        memoryCards[second].matched = true;
+                        document.querySelectorAll('.memory-card')[first].classList.add('matched');
+                        document.querySelectorAll('.memory-card')[second].classList.add('matched');
+                        matchedPairs++;
+                        document.getElementById('matchCount').textContent = matchedPairs;
+                        
+                        if (matchedPairs === 8) {
+                            setTimeout(() => alert(`🎉 Selamat! Kamu menang dalam ${moveCount} gerakan!`), 300);
+                        }
+                    } else {
+                        // No match
+                        document.querySelectorAll('.memory-card')[first].innerHTML = '❓';
+                        document.querySelectorAll('.memory-card')[first].classList.remove('flipped');
+                        document.querySelectorAll('.memory-card')[second].innerHTML = '❓';
+                        document.querySelectorAll('.memory-card')[second].classList.remove('flipped');
+                    }
+                    flippedCards = [];
+                }, 800);
+            }
+        }
+
+        function resetMemoryGame() {
+            initMemoryGame();
+        }
+
+        // Initialize memory game on load
+        setTimeout(() => initMemoryGame(), 500);
+
+        // Kiss Counter
+        let kissCount = 0;
+        const kissMessages = [
+            'Mulai kirim ciuman!',
+            'Manis sekali! 😘',
+            'Romantis banget! 💋',
+            'Love is in the air! 💕',
+            'Ciuman penuh cinta! 💖',
+            'Sweet kisses! 💗',
+            'Passionate! 🔥',
+            'So romantic! 💝',
+            'Full of love! 💞',
+            'Amazing! ✨'
+        ];
+
+        function sendKiss() {
+            kissCount++;
+            document.getElementById('kissCount').textContent = kissCount;
+            
+            const messageIndex = Math.min(Math.floor(kissCount / 5), kissMessages.length - 1);
+            document.getElementById('kissMessage').textContent = kissMessages[messageIndex];
+            
+            // Create floating kiss
+            createFloatingKiss();
+        }
+
+        function createFloatingKiss() {
+            const kiss = document.createElement('div');
+            kiss.textContent = '💋';
+            kiss.style.position = 'fixed';
+            kiss.style.left = Math.random() * window.innerWidth + 'px';
+            kiss.style.top = '50%';
+            kiss.style.fontSize = '30px';
+            kiss.style.pointerEvents = 'none';
+            kiss.style.zIndex = '9999';
+            kiss.style.animation = 'float-up 2s forwards';
+            document.body.appendChild(kiss);
+            
+            setTimeout(() => kiss.remove(), 2000);
+        }
+
+        function resetKisses() {
+            kissCount = 0;
+            document.getElementById('kissCount').textContent = '0';
+            document.getElementById('kissMessage').textContent = kissMessages[0];
+        }
+
+        // Heart Catcher Game
+        let heartGameActive = false;
+        let catchScore = 0;
+        let basketPosition = 50;
+
+        function startHeartGame() {
+            if (heartGameActive) return;
+            
+            heartGameActive = true;
+            catchScore = 0;
+            document.getElementById('catchScore').textContent = '0';
+            
+            // Start spawning hearts
+            const gameInterval = setInterval(() => {
+                if (!heartGameActive) {
+                    clearInterval(gameInterval);
+                    return;
+                }
+                spawnFallingHeart();
+            }, 1500);
+            
+            // Game duration
+            setTimeout(() => {
+                heartGameActive = false;
+                alert(`🎮 Game Over! Skor: ${catchScore} ❤️`);
+            }, 30000);
+        }
+
+        function spawnFallingHeart() {
+            const container = document.getElementById('heartGameContainer');
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 80 + '%';
+            heart.style.animationDuration = '3s';
+            
+            container.appendChild(heart);
+            
+            // Check collision
+            const checkInterval = setInterval(() => {
+                const heartRect = heart.getBoundingClientRect();
+                const basketRect = document.getElementById('heartBasket').getBoundingClientRect();
+                
+                if (heartRect.bottom >= basketRect.top &&
+                    heartRect.left < basketRect.right &&
+                    heartRect.right > basketRect.left) {
+                    catchScore++;
+                    document.getElementById('catchScore').textContent = catchScore;
+                    heart.remove();
+                    clearInterval(checkInterval);
+                }
+            }, 50);
+            
+            setTimeout(() => {
+                heart.remove();
+                clearInterval(checkInterval);
+            }, 3000);
+        }
+
+        // Move basket on touch/mouse
+        document.addEventListener('touchmove', (e) => {
+            const container = document.getElementById('heartGameContainer');
+            if (!container) return;
+            
+            const touch = e.touches[0];
+            const containerRect = container.getBoundingClientRect();
+            let newPosition = touch.clientX - containerRect.left - 30;
+            newPosition = Math.max(0, Math.min(newPosition, containerRect.width - 60));
+            
+            const basket = document.getElementById('heartBasket');
+            basket.style.left = newPosition + 'px';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const container = document.getElementById('heartGameContainer');
+            if (!container || !heartGameActive) return;
+            
+            const containerRect = container.getBoundingClientRect();
+            if (e.clientY < containerRect.top || e.clientY > containerRect.bottom) return;
+            
+            let newPosition = e.clientX - containerRect.left - 30;
+            newPosition = Math.max(0, Math.min(newPosition, containerRect.width - 60));
+            
+            const basket = document.getElementById('heartBasket');
+            basket.style.left = newPosition + 'px';
+        });
+
+        // Love Fortune
+        const fortunes = [
+            '💕 Cinta sejati akan segera menemukanmu! Tetaplah buka hati.',
+            '💖 Seseorang sedang memikirkanmu sekarang. Percayalah!',
+            '💗 Hubunganmu akan semakin kuat. Komunikasi adalah kunci.',
+            '💘 Surprise romantis menunggumu minggu ini!',
+            '💝 Kamu akan bertemu seseorang yang spesial segera.',
+            '💞 Cintamu akan tumbuh lebih dalam hari ini.',
+            '💓 Keberanian untuk mengungkapkan perasaan akan membawa kebahagiaan.',
+            '❤️ Pasanganmu sangat menghargaimu. Tunjukkan cintamu!',
+            '💕 Romance is in the air! Manfaatkan momen ini.',
+            '💖 Kejutan manis akan datang dari orang terkasih.'
+        ];
+
+        function openFortune() {
+            const message = fortunes[Math.floor(Math.random() * fortunes.length)];
+            const fortuneEl = document.getElementById('fortuneMessage');
+            fortuneEl.textContent = message;
+            fortuneEl.classList.add('show');
+        }
+
+        // Love Quiz
+        let quizScore = 0;
+        let answeredQuestions = new Set();
+
+        function selectQuiz(element, points) {
+            const question = element.closest('.quiz-question');
+            const questionIndex = Array.from(question.parentElement.children).indexOf(question);
+            const options = question.querySelectorAll('.quiz-option');
+            
+            // Remove previous selection
+            if (answeredQuestions.has(questionIndex)) {
+                options.forEach(opt => {
+                    if (opt.classList.contains('selected')) {
+                        quizScore -= parseInt(opt.dataset.points || 0);
+                    }
+                });
+            }
+            
+            // Clear selections
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add new selection
+            element.classList.add('selected');
+            element.dataset.points = points;
+            answeredQuestions.add(questionIndex);
+            quizScore += points;
+            
+            // Show result if all answered
+            if (answeredQuestions.size === 3) {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            const scoreEl = document.getElementById('quizScore');
+            const pointsEl = document.getElementById('quizPoints');
+            const resultEl = document.getElementById('quizResult');
+            
+            pointsEl.textContent = quizScore + '/45';
+            
+            let result = '';
+            if (quizScore >= 40) {
+                result = '🌹 Hopeless Romantic! Kamu sangat romantis dan menghargai setiap momen bersama orang terkasih!';
+            } else if (quizScore >= 30) {
+                result = '💕 True Romantic! Kamu tahu cara menghargai cinta dengan manis dan penuh perhatian!';
+            } else if (quizScore >= 20) {
+                result = '💖 Sweet Heart! Kamu punya cara unik mengekspresikan cinta. Tetap jadi dirimu!';
+            } else {
+                result = '💗 Practical Lover! Kamu menunjukkan cinta dengan cara praktis namun tulus!';
+            }
+            
+            resultEl.textContent = result;
+            scoreEl.classList.add('show');
+            
+            setTimeout(() => {
+                scoreEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // Prevent pull-to-refresh on mobile
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.page')) {
+                const page = e.target.closest('.page');
+                if (page.scrollTop === 0 && e.touches[0].clientY > touchStartX) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
